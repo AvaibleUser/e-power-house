@@ -1,0 +1,44 @@
+package edu.epowerhouse.sales.daos;
+
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+import edu.epowerhouse.common.models.records.Sale;
+
+public class SaleDAO {
+    private static final String INSERT_SALE_SQL = "INSERT INTO ventas.venta (cui_empleado, nit_cliente, id_sucursal, fecha, descuento) VALUES (?, ?, ?, ?, ?)";
+    private static final String UPDATE_SALE_SQL = "UPDATE ventas.venta SET cui_empleado = ?, nit_cliente = ?, id_sucursal = ?, fecha = ?, descuento = ? WHERE id = ?";
+
+    private final Connection connection;
+
+    public SaleDAO(Connection connection) {
+        this.connection = connection;
+    }
+
+    public void createSale(Sale sale) throws SQLException {
+        try (PreparedStatement statement = connection.prepareStatement(INSERT_SALE_SQL)) {
+            statement.setString(1, sale.employeeCui());
+            statement.setString(2, sale.clientNit());
+            statement.setInt(3, sale.branchId());
+            statement.setDate(4, Date.valueOf(sale.date()));
+            statement.setFloat(5, sale.discount());
+
+            statement.executeUpdate();
+        }
+    }
+
+    public void updateSale(Sale sale) throws SQLException {
+        try (PreparedStatement statement = connection.prepareStatement(UPDATE_SALE_SQL)) {
+            statement.setString(1, sale.employeeCui());
+            statement.setString(2, sale.clientNit());
+            statement.setInt(3, sale.branchId());
+            statement.setDate(4, Date.valueOf(sale.date()));
+            statement.setFloat(5, sale.discount());
+            statement.setInt(6, sale.id());
+
+            statement.executeUpdate();
+        }
+    }
+}
