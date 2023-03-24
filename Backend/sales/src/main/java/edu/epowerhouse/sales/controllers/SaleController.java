@@ -42,17 +42,4 @@ public class SaleController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Void> updateSale(@PathVariable int id, @RequestBody Sale sale) {
-        if (sale.id() != id) {
-            return ResponseEntity.badRequest().build();
-        }
-        try {
-            saleService.updateSale(sale);
-            return ResponseEntity.ok().build();
-        } catch (SQLException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
 }

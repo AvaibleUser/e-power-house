@@ -1,12 +1,14 @@
-package edu.epowerhouse.sales.daos;
+package edu.epowerhouse.inventory.daos;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import edu.epowerhouse.common.models.records.Stock;
 
 public class StockDAO {
     private static final String INSERT_STOCK_SQL = "INSERT INTO ventas.stock (id_sucursal, id_producto, cantidad) VALUES (?, ?, ?)";
+    private static final String FIND_STOCK_SQL = "SELECT * FROM ventas.stock WHERE id_sucursal = ? AND id_producto = ?";
     private static final String UPDATE_STOCK_SQL = "UPDATE ventas.stock SET cantidad = ? WHERE id_sucursal = ? AND id_producto = ?";
 
     private final Connection connection;
@@ -23,6 +25,26 @@ public class StockDAO {
 
             statement.executeUpdate();
         }
+    }
+
+    public Stock findStock(int branchId, int productId) throws SQLException {
+        Stock inventory = null;
+
+        try (PreparedStatement statement = connection.prepareStatement(FIND_STOCK_SQL)) {
+            statement.setInt(1, branchId);
+            statement.setInt(2, productId);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (!resultSet.next()) {
+                    return null;
+                }
+                inventory = new Stock(
+                        resultSet.getInt("id_sucursal"),
+                        resultSet.getInt("id_producto"),
+                        resultSet.getInt("cantidad"));
+            }
+        }
+        return inventory;
     }
 
     public void updateStock(Stock stock) throws SQLException {
