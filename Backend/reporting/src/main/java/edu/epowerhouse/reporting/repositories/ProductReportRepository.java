@@ -66,19 +66,19 @@ public class ProductReportRepository {
         return soldProducts;
     }
 
-    public List<ProductSold> reportBestSellingProducts() throws SQLException {
+    public List<ProductSold> getMostSelledProducts() throws SQLException {
         return reportProducts(MOST_SELLED_PRODUCTS, -1);
     }
 
-    public List<ProductSold> reportBestRevenueProducts() throws SQLException {
+    public List<ProductSold> getHighestIncomeProducts() throws SQLException {
         return reportProducts(HIGHEST_INCOME_PRODUCTS, -1);
     }
 
-    public List<ProductSold> reportBestSellingProductsByBranch(int branchId) throws SQLException {
+    public List<ProductSold> getMostSelledProductsByBranch(int branchId) throws SQLException {
         return reportProducts(MOST_SELLED_PRODUCTS_BY_BRANCH, branchId);
     }
 
-    public List<ProductSold> reportBestRevenueProductsByBranch(int branchId) throws SQLException {
+    public List<ProductSold> getHighestIncomeProductsByBranch(int branchId) throws SQLException {
         return reportProducts(HIGHEST_INCOME_PRODUCTS_BY_BRANCH, branchId);
     }
 }

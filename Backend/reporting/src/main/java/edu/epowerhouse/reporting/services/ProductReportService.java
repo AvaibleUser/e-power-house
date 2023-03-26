@@ -16,19 +16,19 @@ public class ProductReportService {
         this.productReportRepository = productReportRepository;
     }
 
-    public List<ProductSold> reportBestSellingProducts() throws SQLException {
-        return productReportRepository.reportBestSellingProducts();
+    public List<ProductSold> getMostSelledProducts() throws SQLException {
+        return productReportRepository.getMostSelledProducts();
     }
 
-    public List<ProductSold> reportBestRevenueProducts() throws SQLException {
-        return productReportRepository.reportBestRevenueProducts();
+    public List<ProductSold> getHighestIncomeProducts() throws SQLException {
+        return productReportRepository.getHighestIncomeProducts();
     }
 
-    public List<ProductSold> reportBestSellingProductsByBranch(int branchId) throws SQLException {
-        return productReportRepository.reportBestSellingProductsByBranch(branchId);
+    public List<ProductSold> getMostSelledProductsByBranch(int branchId) throws SQLException {
+        return productReportRepository.getMostSelledProductsByBranch(branchId);
     }
 
-    public List<ProductSold> reportBestRevenueProductsByBranch(int branchId) throws SQLException {
-        return productReportRepository.reportBestRevenueProductsByBranch(branchId);
+    public List<ProductSold> getHighestIncomeProductsByBranch(int branchId) throws SQLException {
+        return productReportRepository.getHighestIncomeProductsByBranch(branchId);
     }
 }
