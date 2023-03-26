@@ -29,7 +29,7 @@ public class StockService {
     public void updateStockFromBranch(int targetBranchId, Stock stockForTransfer) throws SQLException {
         int productId = stockForTransfer.productId();
         int sourceBranchId = stockForTransfer.branchId();
-        int transferQuantity = stockForTransfer.quantity();
+        int transferAmount = stockForTransfer.amount();
 
         if (targetBranchId == sourceBranchId) {
             throw new IllegalArgumentException("Cannot made shipment from the same branch.");
@@ -40,8 +40,8 @@ public class StockService {
             throw new IllegalArgumentException("Source stock not found.");
         }
 
-        int newSourceQuantity = sourceStock.quantity() - transferQuantity;
-        if (newSourceQuantity < 0) {
+        int newSourceAmount = sourceStock.amount() - transferAmount;
+        if (newSourceAmount < 0) {
             throw new IndexOutOfBoundsException("Not enough quantity in the source stock.");
         }
         
@@ -50,17 +50,17 @@ public class StockService {
             throw new IllegalArgumentException("Target stock not found.");
         }
 
-        sourceStock = new Stock(sourceBranchId, productId, newSourceQuantity);
+        sourceStock = new Stock(sourceBranchId, productId, newSourceAmount);
         stockRepository.updateStock(sourceStock);
         
-        int newTargetQuantity = targetStock.quantity() + transferQuantity;
-        targetStock = new Stock(targetBranchId, productId, newTargetQuantity);
+        int newTargetAmount = targetStock.amount() + transferAmount;
+        targetStock = new Stock(targetBranchId, productId, newTargetAmount);
         stockRepository.updateStock(targetStock);
     }
 
     public void updateStockFromWarehouse(int targetBranchId, Inventory inventoryForTransfer) throws SQLException {
         int productId = inventoryForTransfer.productId();
-        int transferQuantity = inventoryForTransfer.quantity();
+        int transferAmount = inventoryForTransfer.amount();
         int sourceWarehouseId = inventoryForTransfer.warehouseId();
 
         Inventory sourceInventory = inventoryRepository.findInventory(sourceWarehouseId, productId);
@@ -68,8 +68,8 @@ public class StockService {
             throw new IllegalArgumentException("Source inventory not found.");
         }
 
-        int newSourceQuantity = sourceInventory.quantity() - transferQuantity;
-        if (newSourceQuantity < 0) {
+        int newSourceAmount = sourceInventory.amount() - transferAmount;
+        if (newSourceAmount < 0) {
             throw new IndexOutOfBoundsException("Not enough quantity in the source inventory.");
         }
         
@@ -78,11 +78,11 @@ public class StockService {
             throw new IllegalArgumentException("Target stock not found.");
         }
 
-        sourceInventory = new Inventory(sourceWarehouseId, productId, newSourceQuantity);
+        sourceInventory = new Inventory(sourceWarehouseId, productId, newSourceAmount);
         inventoryRepository.updateInventory(sourceInventory);
         
-        int newTargetQuantity = targetStock.quantity() + transferQuantity;
-        targetStock = new Stock(targetBranchId, productId, newTargetQuantity);
+        int newTargetAmount = targetStock.amount() + transferAmount;
+        targetStock = new Stock(targetBranchId, productId, newTargetAmount);
         stockRepository.updateStock(targetStock);
     }
 }

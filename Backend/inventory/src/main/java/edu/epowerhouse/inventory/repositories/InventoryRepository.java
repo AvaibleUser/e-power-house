@@ -12,8 +12,8 @@ import edu.epowerhouse.common.models.records.Inventory;
 import edu.epowerhouse.inventory.daos.InventoryDAO;
 
 public class InventoryRepository {
-    private static final String FIND_WAREHOUSE_INVENTORY_SQL = "SELECT b.nombre AS bodega_name, p.nombre AS producto_nombre, p.precio_unidad, "
-            + "p.costo_unidad, i.cantidad, p.descripcion FROM inventario.inventario i JOIN inventario.bodega b ON b.id = i.id_bodega"
+    private static final String FIND_WAREHOUSE_INVENTORY_SQL = "SELECT b.id, b.nombre AS bodega_name, p.nombre AS product_name, p.unit_price, "
+            + "p.unit_cost, i.cantidad, p.descripcion FROM inventario.inventario i JOIN inventario.bodega b ON b.id = i.id_bodega"
             + "JOIN ventas.producto p ON p.id = i.id_producto WHERE i.id_bodega = ?;";
 
     private final Connection connection;
@@ -36,14 +36,15 @@ public class InventoryRepository {
 
             try (ResultSet inventoryResultSet = inventoryStatement.executeQuery()) {
                 while (inventoryResultSet.next()) {
+                    int id = inventoryResultSet.getInt("id");
                     String warehouseName = inventoryResultSet.getString("bodega_name");
-                    String productName = inventoryResultSet.getString("producto_nombre");
-                    double unitPrice = inventoryResultSet.getDouble("precio_unidad");
-                    double unitCost = inventoryResultSet.getDouble("costo_unidad");
-                    int quantity = inventoryResultSet.getInt("cantidad");
+                    String productName = inventoryResultSet.getString("product_name");
+                    double unitPrice = inventoryResultSet.getDouble("unit_price");
+                    double unitCost = inventoryResultSet.getDouble("unit_cost");
+                    int amount = inventoryResultSet.getInt("cantidad");
                     String description = inventoryResultSet.getString("descripcion");
     
-                    inventory.add(new InventoryItem(warehouseName, productName, unitPrice, unitCost, quantity, description));
+                    inventory.add(new InventoryItem(id, warehouseName, productName, unitPrice, unitCost, amount, description));
                 }
             }
         }

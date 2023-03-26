@@ -15,8 +15,8 @@ import edu.epowerhouse.inventory.daos.StockDAO;
 
 @Repository
 public class StockRepository {
-    private static final String FIND_BRANCH_STOCK_SQL = "SELECT su.nombre AS sucursal_name, p.nombre AS producto_nombre, p.precio_unidad, "
-            + "p.costo_unidad, st.cantidad, p.descripcion FROM ventas.stock st JOIN ventas.sucursal su b ON su.id = st.id_bodega"
+    private static final String FIND_BRANCH_STOCK_SQL = "SELECT su.id, su.nombre AS sucursal_name, p.nombre AS producto_name, p.unit_price, "
+            + "p.unit_cost, st.cantidad, p.descripcion FROM ventas.stock st JOIN ventas.sucursal su b ON su.id = st.id_bodega"
             + "JOIN ventas.producto p ON p.id = st.id_producto WHERE st.id_sucursal = ?;";
 
     private final Connection connection;
@@ -39,14 +39,15 @@ public class StockRepository {
     
             try (ResultSet stockResultSet = stockStatement.executeQuery()) {
                 while (stockResultSet.next()) {
+                    int id = stockResultSet.getInt("id");
                     String branchName = stockResultSet.getString("bodega_name");
-                    String productName = stockResultSet.getString("producto_nombre");
-                    double unitPrice = stockResultSet.getDouble("precio_unidad");
-                    double unitCost = stockResultSet.getDouble("costo_unidad");
-                    int quantity = stockResultSet.getInt("cantidad");
+                    String productName = stockResultSet.getString("producto_name");
+                    double unitPrice = stockResultSet.getDouble("unit_price");
+                    double unitCost = stockResultSet.getDouble("unit_cost");
+                    int amount = stockResultSet.getInt("cantidad");
                     String description = stockResultSet.getString("descripcion");
     
-                    stock.add(new StockItem(branchName, productName, unitPrice, unitCost, quantity, description));
+                    stock.add(new StockItem(id, branchName, productName, unitPrice, unitCost, amount, description));
                 }
             }
         }

@@ -18,7 +18,7 @@ CREATE TABLE ventas.cliente (
 
 CREATE TABLE ventas.producto (
   id SERIAL,
-  nombre VARCHAR(50),
+  nombre VARCHAR(50) UNIQUE,
   descripcion TEXT,
   precio_unidad NUMERIC(10, 2),
   costo_unidad NUMERIC(10, 2),

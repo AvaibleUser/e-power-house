@@ -21,7 +21,7 @@ public class StockDAO {
         try (PreparedStatement statement = connection.prepareStatement(INSERT_STOCK_SQL)) {
             statement.setInt(1, stock.branchId());
             statement.setInt(2, stock.productId());
-            statement.setInt(3, stock.quantity());
+            statement.setInt(3, stock.amount());
 
             statement.executeUpdate();
         }
@@ -49,7 +49,7 @@ public class StockDAO {
 
     public void updateStock(Stock stock) throws SQLException {
         try (PreparedStatement statement = connection.prepareStatement(UPDATE_STOCK_SQL)) {
-            statement.setInt(1, stock.quantity());
+            statement.setInt(1, stock.amount());
             statement.setInt(2, stock.branchId());
             statement.setInt(3, stock.productId());
 

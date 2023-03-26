@@ -22,7 +22,7 @@ public class InventoryDAO {
         try (PreparedStatement statement = connection.prepareStatement(INSERT_INVENTORY_SQL)) {
             statement.setInt(1, inventory.warehouseId());
             statement.setInt(2, inventory.productId());
-            statement.setInt(3, inventory.quantity());
+            statement.setInt(3, inventory.amount());
 
             statement.executeUpdate();
         }
@@ -50,7 +50,7 @@ public class InventoryDAO {
 
     public void updateInventory(Inventory inventory) throws SQLException {
         try (PreparedStatement statement = connection.prepareStatement(UPDATE_INVENTORY_SQL)) {
-            statement.setInt(1, inventory.quantity());
+            statement.setInt(1, inventory.amount());
             statement.setInt(2, inventory.warehouseId());
             statement.setInt(3, inventory.productId());
 
