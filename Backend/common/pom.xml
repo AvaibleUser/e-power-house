@@ -6,12 +6,12 @@
   <parent>
     <groupId>edu.epowerhouse</groupId>
     <artifactId>multimanager</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
   </parent>
 
   <groupId>edu.epowerhouse</groupId>
   <artifactId>common</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>0.0.1</version>
   <name>Common</name>
   
   <dependencies>
