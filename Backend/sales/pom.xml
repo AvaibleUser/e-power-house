@@ -6,24 +6,24 @@
 	<parent>
 		<groupId>edu.epowerhouse</groupId>
 		<artifactId>multimanager</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
 	</parent>
 
 	<groupId>edu.epowerhouse</groupId>
 	<artifactId>sales</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+  <version>0.0.1</version>
 	<name>Sales</name>
 	<description>Service to manage request related to sales</description>
 
 	<properties>
-		<java.version>19</java.version>
+		<java.version>17</java.version>
 	</properties>
 
   <dependencies>
     <dependency>
       <groupId>edu.epowerhouse</groupId>
       <artifactId>common</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <version>0.0.1</version>
     </dependency>
   </dependencies>
 
