@@ -3,7 +3,6 @@ version: "3.9"
 services:
   db:
     image: postgres
-    restart: always
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -14,7 +13,6 @@ services:
   inventory:
     build:
       context: ./inventory
-    restart: always
     depends_on:
       - db
     environment:
@@ -25,7 +23,6 @@ services:
   sales:
     build:
       context: ./sales
-    restart: always
     depends_on:
       - db
     environment:
@@ -36,7 +33,6 @@ services:
   reporting:
     build:
       context: ./reporting
-    restart: always
     depends_on:
       - db
     environment:
@@ -47,7 +43,6 @@ services:
   authentication:
     build:
       context: ./authentication
-    restart: always
     depends_on:
       - db
     environment:
@@ -58,7 +53,6 @@ services:
   gateway:
     build:
       context: ./gateway
-    restart: always
     ports:
       - "8080:8080"
     depends_on:
