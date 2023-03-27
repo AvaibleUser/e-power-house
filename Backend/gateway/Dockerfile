@@ -1,4 +1,4 @@
-FROM adoptopenjdk/openjdk11:alpine-jre
+FROM adoptopenjdk/openjdk17:alpine-jre
 WORKDIR /app
 COPY target/gateway-0.0.1.jar .
 EXPOSE 8080
