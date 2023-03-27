@@ -13,7 +13,7 @@ import edu.epowerhouse.common.models.records.Stock;
 import edu.epowerhouse.inventory.services.StockService;
 
 @RestController
-@RequestMapping("/stocks")
+@RequestMapping("/grocer/stocks")
 public class StockController {
     private final StockService stockService;
     

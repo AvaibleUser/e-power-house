@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: multimanagers-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+
+      routes:
+        - id: sales
+          uri: lb://sales
+          predicates:
+            - Path=/api/salesman/**
+
+        - id: reporting
+          uri: lb://reporting
+          predicates:
+            - Path=/api/admin/**
+
+        - id: authentication
+          uri: lb://authentication
+          predicates:
+            - Path=/api/**
+
+        - id: inventory
+          uri: lb://inventory
+          predicates:
+            - Path=/api/**

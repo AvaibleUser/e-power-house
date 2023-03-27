@@ -1,6 +1,7 @@
 package edu.epowerhouse.common.models.records;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public record Sale(
         int id,
@@ -8,5 +9,6 @@ public record Sale(
         String clientNit,
         int branchId,
         LocalDate date,
-        float discount) {
+        float discount,
+        List<SaleDetail> saleDetails) {
 }

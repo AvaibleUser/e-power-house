@@ -12,7 +12,7 @@ import edu.epowerhouse.common.models.records.Inventory;
 import edu.epowerhouse.inventory.services.InventoryService;
 
 @RestController
-@RequestMapping("/inventory")
+@RequestMapping("/inventory-manger/inventory")
 public class InventoryController {
     private final InventoryService inventoryService;
     

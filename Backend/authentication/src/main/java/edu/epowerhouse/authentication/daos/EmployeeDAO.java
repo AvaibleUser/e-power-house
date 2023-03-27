@@ -1,13 +1,16 @@
-package edu.epowerhouse.sales.daos;
+package edu.epowerhouse.authentication.daos;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.springframework.stereotype.Component;
+
 import edu.epowerhouse.common.models.enums.JobTitle;
 import edu.epowerhouse.common.models.records.Employee;
 
+@Component
 public class EmployeeDAO {
     private static final String INSERT_EMPLOYEE_SQL = "INSERT INTO empleados.empleado (cui, nombre, apellido, contrasena, id_sucursal, id_bodega, puesto_trabajo, fecha_nacimiento, direccion, correo_electronico, telefono) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String FIND_EMPLOYEE_SQL = "SELECT * FROM empleados.empleado WHERE cui = ?";
