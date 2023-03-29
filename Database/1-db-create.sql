@@ -1,9 +1,9 @@
-CREATE DATABASE e_power_house
+CREATE DATABASE e_power_house;
 \c e_power_house
 
 CREATE SCHEMA ventas;
 CREATE SCHEMA inventario;
-CREATE SCHEMA empleado;
+CREATE SCHEMA empleados;
 CREATE TYPE puesto AS ENUM ('vendedor', 'inventarista', 'bodeguero', 'administrador');
 
 CREATE TABLE ventas.cliente (
@@ -18,7 +18,7 @@ CREATE TABLE ventas.cliente (
 
 CREATE TABLE ventas.producto (
   id SERIAL,
-  nombre VARCHAR(50) UNIQUE,
+  nombre VARCHAR(100) UNIQUE,
   descripcion TEXT,
   precio_unidad NUMERIC(10, 2),
   costo_unidad NUMERIC(10, 2),
@@ -47,7 +47,7 @@ CREATE TABLE inventario.bodega (
   nombre VARCHAR(50),
   direccion VARCHAR(100),
   telefono VARCHAR(15),
-  PRIMARY KEY (id),
+  PRIMARY KEY (id)
 );
 
 CREATE TABLE inventario.inventario (

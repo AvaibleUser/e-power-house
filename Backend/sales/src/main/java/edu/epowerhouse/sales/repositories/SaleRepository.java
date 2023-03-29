@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import edu.epowerhouse.sales.daos.SaleDAO;
 import edu.epowerhouse.common.models.aggregations.Invoice;
 import edu.epowerhouse.common.models.records.Sale;
+import edu.epowerhouse.common.utils.DatabaseConnection;
 
 @Repository
 public class SaleRepository {
@@ -23,19 +24,19 @@ public class SaleRepository {
             + "WHERE v.id = ?";
 
     private static final String SELECT_TOTAL_CLIENT_LAST_SALE = "SELECT SUM(dv.cantidad * p.precio_unidad) AS total "
-            + "FROM ventas.venta v"
+            + "FROM ventas.venta v "
             + "JOIN ventas.detalle_venta dv ON v.id = dv.id_venta "
             + "JOIN ventas.producto p ON dv.id_producto = p.id "
-            + "GROUP BY v.id WHERE v.nit_cliente = ? ORDER BY v.fecha DESC LIMIT 1";
+            + "WHERE v.nit_cliente = ? GROUP BY v.id ORDER BY v.fecha DESC LIMIT 1";
 
     private final Connection connection;
     private final SaleDetailRepository saleDetailRepository;
     private final SaleDAO saleDAO;
 
-    public SaleRepository(Connection connection) {
-        this.connection = connection;
-        this.saleDetailRepository = new SaleDetailRepository(connection);
-        this.saleDAO = new SaleDAO(connection);
+    public SaleRepository(SaleDAO saleDAO, SaleDetailRepository saleDetailRepository) {
+        this.connection = DatabaseConnection.getConnection();
+        this.saleDetailRepository = saleDetailRepository;
+        this.saleDAO = saleDAO;
     }
 
     public double getLastClientSaleTotal(String clientNit) throws SQLException {
@@ -89,14 +90,13 @@ public class SaleRepository {
         try {
             connection.setAutoCommit(false);
 
-            saleDAO.createSale(sale);
-            saleDetailRepository.createSaleDetails(sale.saleDetails());
+            long saleId = saleDAO.createSale(sale);
+            saleDetailRepository.createSaleDetails(saleId, sale.branchId(), sale.saleDetails());
 
             connection.commit();
         } finally {
             connection.setAutoCommit(true);
         }
-
     }
 
     public void updateSale(Sale sale) throws SQLException {

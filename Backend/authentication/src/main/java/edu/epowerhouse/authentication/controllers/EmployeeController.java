@@ -34,9 +34,13 @@ public class EmployeeController {
     @PostMapping("/login")
     public ResponseEntity<Employee> loginEmployee(@RequestBody Employee employee) {
         try {
-            // TODO: Add login
-            return ResponseEntity.ok(employee);
-        } catch (Exception/* SQLException */ e) {
+            Employee employeeFromDb = employeeService.findEmployeeJobTitle(employee);
+            return ResponseEntity.ok(employeeFromDb);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }

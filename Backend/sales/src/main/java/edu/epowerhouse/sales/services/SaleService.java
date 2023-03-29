@@ -21,10 +21,11 @@ public class SaleService {
     private final SaleDetailRepository saleDetailRepository;
     private final WebClient webClient;
 
-    public SaleService(SaleRepository saleRepository, SaleDetailRepository saleDetailRepository, WebClient webClient) {
+    public SaleService(SaleRepository saleRepository, SaleDetailRepository saleDetailRepository,
+            WebClient.Builder webClientBuilder) {
         this.saleRepository = saleRepository;
         this.saleDetailRepository = saleDetailRepository;
-        this.webClient = webClient;
+        this.webClient = webClientBuilder.baseUrl("http://authentication:8080").build();
     }
 
     private float getSaleDiscount(String clientNit) throws SQLException {
@@ -62,14 +63,14 @@ public class SaleService {
 
     public void createSale(Sale sale) throws SQLException {
         String employeeCui = sale.employeeCui();
-        Employee employee = webClient.get().uri("/api/public/employee/" + employeeCui)
+        Employee employee = webClient.get().uri("/public/employee/" + employeeCui)
                 .retrieve()
                 .bodyToMono(Employee.class)
                 .block();
 
         float discount = 0;
 
-        if (!sale.clientNit().equals("CF")) {
+        if (!sale.clientNit().strip().equals("CF")) {
             discount = getSaleDiscount(sale.clientNit());
         }
 

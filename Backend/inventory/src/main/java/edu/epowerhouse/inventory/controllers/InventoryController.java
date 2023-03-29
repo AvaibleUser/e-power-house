@@ -12,7 +12,7 @@ import edu.epowerhouse.common.models.records.Inventory;
 import edu.epowerhouse.inventory.services.InventoryService;
 
 @RestController
-@RequestMapping("/inventory-manger/inventory")
+@RequestMapping("/inventory-manager/inventory")
 public class InventoryController {
     private final InventoryService inventoryService;
     
@@ -24,7 +24,7 @@ public class InventoryController {
     public ResponseEntity<List<InventoryItem>> getCompleteInventory(@PathVariable int warehouseId) {
         try {
             List<InventoryItem> inventory = inventoryService.findCompleteInventory(warehouseId);
-            if (inventory == null || inventory.isEmpty()) {
+            if (inventory == null) {
                 return ResponseEntity.notFound().build();
             }
             return ResponseEntity.ok(inventory);

@@ -10,6 +10,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import edu.epowerhouse.common.models.aggregations.ClientWithPurchases;
+import edu.epowerhouse.common.utils.DatabaseConnection;
 
 @Repository
 public class ClientReportRepository {
@@ -24,8 +25,8 @@ public class ClientReportRepository {
 
     private final Connection connection;
 
-    public ClientReportRepository(Connection connection) {
-        this.connection = connection;
+    public ClientReportRepository() {
+        this.connection = DatabaseConnection.getConnection();
     }
 
     private List<ClientWithPurchases> getClientsWithCustomQuery(String query) throws SQLException {

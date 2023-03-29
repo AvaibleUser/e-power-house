@@ -10,6 +10,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import edu.epowerhouse.common.models.aggregations.ProductSold;
+import edu.epowerhouse.common.utils.DatabaseConnection;
 
 @Repository
 public class ProductReportRepository {
@@ -34,8 +35,8 @@ public class ProductReportRepository {
 
     private final Connection connection;
 
-    public ProductReportRepository(Connection connection) {
-        this.connection = connection;
+    public ProductReportRepository() {
+        this.connection = DatabaseConnection.getConnection();
     }
 
     private List<ProductSold> reportProducts(String query, int branchId) throws SQLException {

@@ -10,14 +10,14 @@ import org.springframework.stereotype.Component;
 public class DatabaseConnection {
 	private static Connection connection = null;
 
-	private static final String URL = "jdbc:postgresql://localhost:5432/org";
-	private static final String USER = "postgres";
-	private static final String PASSWORD = "password";
+	private static final String URL = "jdbc:postgresql://db:5432/e_power_house";
+	private static final String USER = "epowerhousemanagemer";
+	private static final String PASSWORD = "epowerhousemanagemerpass";
 
 	public static Connection getConnection() {
 		if (connection == null) {
 			try {
-				Class.forName("com.postgresql.jdbc.Driver");
+				Class.forName("org.postgresql.Driver");
 				connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			}
 			catch (ClassNotFoundException | SQLException e) {

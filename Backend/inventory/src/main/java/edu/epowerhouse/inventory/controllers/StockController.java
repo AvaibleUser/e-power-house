@@ -16,11 +16,11 @@ import edu.epowerhouse.inventory.services.StockService;
 @RequestMapping("/grocer/stocks")
 public class StockController {
     private final StockService stockService;
-    
+
     public StockController(StockService stockService) {
         this.stockService = stockService;
     }
-    
+
     @PostMapping("/")
     public ResponseEntity<Void> createStock(@RequestBody Stock stock) {
         try {
@@ -30,12 +30,12 @@ public class StockController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-    
+
     @GetMapping("/")
     public ResponseEntity<List<StockItem>> getCompleteStock(@RequestParam int branchId) {
         try {
             List<StockItem> completeStock = stockService.findCompleteStock(branchId);
-            if (completeStock == null || completeStock.isEmpty()) {
+            if (completeStock == null) {
                 return ResponseEntity.notFound().build();
             }
             return ResponseEntity.ok(completeStock);
@@ -43,9 +43,24 @@ public class StockController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-    
+
+    @PutMapping("/shipment/sale/")
+    public ResponseEntity<Void> updateStockForSale(@RequestBody Stock stockForTransfer) {
+        try {
+            stockService.updateStockForSale(stockForTransfer);
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        } catch (IndexOutOfBoundsException e) {
+            return ResponseEntity.badRequest().build();
+        } catch (SQLException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
     @PutMapping("/shipment/branch/{targetBranchId}")
-    public ResponseEntity<Void> updateStockFromBranch(@PathVariable int targetBranchId, @RequestBody Stock stockForTransfer) {
+    public ResponseEntity<Void> updateStockFromBranch(@PathVariable int targetBranchId,
+            @RequestBody Stock stockForTransfer) {
         try {
             stockService.updateStockFromBranch(targetBranchId, stockForTransfer);
             return ResponseEntity.ok().build();
@@ -57,9 +72,10 @@ public class StockController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-    
+
     @PutMapping("/shipment/warehouse/{targetBranchId}")
-    public ResponseEntity<Void> updateStockFromWarehouse(@PathVariable int targetBranchId, @RequestBody Inventory inventoryForTransfer) {
+    public ResponseEntity<Void> updateStockFromWarehouse(@PathVariable int targetBranchId,
+            @RequestBody Inventory inventoryForTransfer) {
         try {
             stockService.updateStockFromWarehouse(targetBranchId, inventoryForTransfer);
             return ResponseEntity.ok().build();

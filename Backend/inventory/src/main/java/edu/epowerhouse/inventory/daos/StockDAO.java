@@ -4,8 +4,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import edu.epowerhouse.common.models.records.Stock;
 
+import org.springframework.stereotype.Component;
+
+import edu.epowerhouse.common.models.records.Stock;
+import edu.epowerhouse.common.utils.DatabaseConnection;
+
+@Component
 public class StockDAO {
     private static final String INSERT_STOCK_SQL = "INSERT INTO ventas.stock (id_sucursal, id_producto, cantidad) VALUES (?, ?, ?)";
     private static final String FIND_STOCK_SQL = "SELECT * FROM ventas.stock WHERE id_sucursal = ? AND id_producto = ?";
@@ -13,8 +18,8 @@ public class StockDAO {
 
     private final Connection connection;
 
-    public StockDAO(Connection connection) {
-        this.connection = connection;
+    public StockDAO() {
+        this.connection = DatabaseConnection.getConnection();
     }
 
     public void createStock(Stock stock) throws SQLException {

@@ -1,3 +1,5 @@
+\c e_power_house
+
 -- Registro de sucursales y bodega
 INSERT INTO ventas.sucursal (nombre, direccion, telefono)
 VALUES

@@ -3,12 +3,15 @@ package edu.epowerhouse.inventory.services;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import edu.epowerhouse.common.models.aggregations.StockItem;
 import edu.epowerhouse.common.models.records.Inventory;
 import edu.epowerhouse.common.models.records.Stock;
 import edu.epowerhouse.inventory.repositories.InventoryRepository;
 import edu.epowerhouse.inventory.repositories.StockRepository;
 
+@Service
 public class StockService {
     private final StockRepository stockRepository;
     private final InventoryRepository inventoryRepository;
@@ -44,15 +47,16 @@ public class StockService {
         if (newSourceAmount < 0) {
             throw new IndexOutOfBoundsException("Not enough quantity in the source stock.");
         }
-        
+
         Stock targetStock = stockRepository.findStock(targetBranchId, productId);
         if (targetStock == null) {
-            throw new IllegalArgumentException("Target stock not found.");
+            stockRepository.createStock(new Stock(targetBranchId, productId, 0));
+            targetStock = stockRepository.findStock(targetBranchId, productId);
         }
 
         sourceStock = new Stock(sourceBranchId, productId, newSourceAmount);
         stockRepository.updateStock(sourceStock);
-        
+
         int newTargetAmount = targetStock.amount() + transferAmount;
         targetStock = new Stock(targetBranchId, productId, newTargetAmount);
         stockRepository.updateStock(targetStock);
@@ -72,7 +76,7 @@ public class StockService {
         if (newSourceAmount < 0) {
             throw new IndexOutOfBoundsException("Not enough quantity in the source inventory.");
         }
-        
+
         Stock targetStock = stockRepository.findStock(targetBranchId, productId);
         if (targetStock == null) {
             throw new IllegalArgumentException("Target stock not found.");
@@ -80,9 +84,28 @@ public class StockService {
 
         sourceInventory = new Inventory(sourceWarehouseId, productId, newSourceAmount);
         inventoryRepository.updateInventory(sourceInventory);
-        
+
         int newTargetAmount = targetStock.amount() + transferAmount;
         targetStock = new Stock(targetBranchId, productId, newTargetAmount);
         stockRepository.updateStock(targetStock);
+    }
+
+    public void updateStockForSale(Stock stockPurchased) throws SQLException {
+        int productId = stockPurchased.productId();
+        int sourceBranchId = stockPurchased.branchId();
+        int selledAmount = stockPurchased.amount();
+
+        Stock sourceStock = stockRepository.findStock(sourceBranchId, productId);
+        if (sourceStock == null) {
+            throw new IllegalArgumentException("Source stock not found.");
+        }
+
+        int newSourceAmount = sourceStock.amount() - selledAmount;
+        if (newSourceAmount < 0) {
+            throw new IndexOutOfBoundsException("Not enough quantity in the source stock.");
+        }
+
+        sourceStock = new Stock(sourceBranchId, productId, newSourceAmount);
+        stockRepository.updateStock(sourceStock);
     }
 }

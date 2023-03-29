@@ -5,8 +5,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import edu.epowerhouse.common.models.records.Inventory;
+import org.springframework.stereotype.Component;
 
+import edu.epowerhouse.common.models.records.Inventory;
+import edu.epowerhouse.common.utils.DatabaseConnection;
+
+@Component
 public class InventoryDAO {
     private static final String INSERT_INVENTORY_SQL = "INSERT INTO inventario.inventario (id_bodega, id_producto, cantidad) VALUES (?, ?, ?)";
     private static final String FIND_INVENTORY_SQL = "SELECT * FROM inventario.inventario WHERE id_bodega = ? AND id_producto = ?";
@@ -14,8 +18,8 @@ public class InventoryDAO {
 
     private final Connection connection;
 
-    public InventoryDAO(Connection connection) {
-        this.connection = connection;
+    public InventoryDAO() {
+        this.connection = DatabaseConnection.getConnection();
     }
 
     public void createInventory(Inventory inventory) throws SQLException {

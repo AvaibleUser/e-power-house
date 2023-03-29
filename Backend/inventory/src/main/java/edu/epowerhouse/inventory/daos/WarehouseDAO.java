@@ -1,4 +1,4 @@
-package edu.epowerhouse.sales.daos;
+package edu.epowerhouse.inventory.daos;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,8 +8,12 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.epowerhouse.common.models.records.Warehouse;
+import org.springframework.stereotype.Component;
 
+import edu.epowerhouse.common.models.records.Warehouse;
+import edu.epowerhouse.common.utils.DatabaseConnection;
+
+@Component
 public class WarehouseDAO {
     private static final String INSERT_WAREHOUSE_SQL = "INSERT INTO inventario.bodega (nombre, direccion, telefono) VALUES (?, ?, ?)";
     private static final String FIND_WAREHOUSE_SQL = "SELECT * FROM inventario.bodega WHERE id = ?";
@@ -18,8 +22,8 @@ public class WarehouseDAO {
 
     private final Connection connection;
 
-    public WarehouseDAO(Connection connection) {
-        this.connection = connection;
+    public WarehouseDAO() {
+        this.connection = DatabaseConnection.getConnection();
     }
 
     public void createWarehouse(Warehouse warehouse) throws SQLException {

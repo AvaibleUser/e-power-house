@@ -1,3 +1,5 @@
+\c e_power_house
+
 -- Se realizan ventas
 INSERT INTO ventas.venta (cui_empleado, nit_cliente, id_sucursal, fecha, descuento)
     SELECT cui, 'CF', 1, '2022-11-02', 0.00 FROM empleados.empleado

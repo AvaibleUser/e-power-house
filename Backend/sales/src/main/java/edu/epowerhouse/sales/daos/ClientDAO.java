@@ -6,8 +6,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import edu.epowerhouse.common.models.records.Client;
+import org.springframework.stereotype.Component;
 
+import edu.epowerhouse.common.models.records.Client;
+import edu.epowerhouse.common.utils.DatabaseConnection;
+
+@Component
 public class ClientDAO {
     private static final String INSERT_CLIENT_SQL = "INSERT INTO ventas.cliente (nit, nombre, apellido, direccion, telefono, fecha_nacimiento) VALUES (?, ?, ?, ?, ?, ?)";
     private static final String FIND_CLIENT_SQL = "SELECT * FROM ventas.cliente WHERE nit = ?";
@@ -15,8 +19,8 @@ public class ClientDAO {
 
     private final Connection connection;
 
-    public ClientDAO(Connection connection) {
-        this.connection = connection;
+    public ClientDAO() {
+        this.connection = DatabaseConnection.getConnection();
     }
 
     public void createClient(Client client) throws SQLException {

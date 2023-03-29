@@ -1,4 +1,4 @@
-package edu.epowerhouse.sales.daos;
+package edu.epowerhouse.inventory.daos;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,19 +8,22 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.epowerhouse.common.models.records.Branch;
+import org.springframework.stereotype.Component;
 
+import edu.epowerhouse.common.models.records.Branch;
+import edu.epowerhouse.common.utils.DatabaseConnection;
+
+@Component
 public class BranchDAO {
     private static final String INSERT_BRANCH_SQL = "INSERT INTO ventas.sucursal (nombre, direccion, telefono) VALUES (?, ?, ?)";
     private static final String FIND_BRANCH_SQL = "SELECT * FROM ventas.sucursal WHERE id = ?";
     private static final String UPDATE_BRANCH_SQL = "UPDATE ventas.sucursal SET nombre = ?, direccion = ?, telefono = ? WHERE id = ?";
-    private static final String DELETE_BRANCH_SQL = "DELETE FROM ventas.sucursal WHERE id = ?";
     private static final String FIND_ALL_BRANCHES_SQL = "SELECT * FROM ventas.sucursal";
 
     private final Connection connection;
 
-    public BranchDAO(Connection connection) {
-        this.connection = connection;
+    public BranchDAO() {
+        this.connection = DatabaseConnection.getConnection();
     }
 
     public void createBranch(Branch branch) throws SQLException {
@@ -61,13 +64,6 @@ public class BranchDAO {
             statement.setString(3, branch.phone());
             statement.setInt(4, branch.id());
 
-            statement.executeUpdate();
-        }
-    }
-
-    public void deleteBranch(int id) throws SQLException {
-        try (PreparedStatement statement = connection.prepareStatement(DELETE_BRANCH_SQL)) {
-            statement.setInt(1, id);
             statement.executeUpdate();
         }
     }

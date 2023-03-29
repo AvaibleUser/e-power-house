@@ -7,21 +7,27 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import edu.epowerhouse.common.models.aggregations.InventoryItem;
 import edu.epowerhouse.common.models.records.Inventory;
+import edu.epowerhouse.common.utils.DatabaseConnection;
 import edu.epowerhouse.inventory.daos.InventoryDAO;
 
+@Repository
 public class InventoryRepository {
-    private static final String FIND_WAREHOUSE_INVENTORY_SQL = "SELECT b.id, b.nombre AS bodega_name, p.nombre AS product_name, p.unit_price, "
-            + "p.unit_cost, i.cantidad, p.descripcion FROM inventario.inventario i JOIN inventario.bodega b ON b.id = i.id_bodega"
-            + "JOIN ventas.producto p ON p.id = i.id_producto WHERE i.id_bodega = ?;";
+    private static final String FIND_WAREHOUSE_INVENTORY_SQL = "SELECT p.id, b.nombre AS bodega_name, p.nombre AS product_name, "
+            + "p.precio_unidad AS unit_price, p.costo_unidad AS unit_cost, i.cantidad, p.descripcion FROM inventario.inventario i "
+            + "JOIN inventario.bodega b ON b.id = i.id_bodega "
+            + "JOIN ventas.producto p ON p.id = i.id_producto "
+            + "WHERE i.id_bodega = ?;";
 
     private final Connection connection;
     private final InventoryDAO inventoryDAO;
 
-    public InventoryRepository(Connection connection) {
-        this.connection = connection;
-        this.inventoryDAO = new InventoryDAO(connection);
+    public InventoryRepository(InventoryDAO inventoryDAO) {
+        this.connection = DatabaseConnection.getConnection();
+        this.inventoryDAO = inventoryDAO;
     }
 
     public Inventory findInventory(int warehouseId, int productId) throws SQLException {

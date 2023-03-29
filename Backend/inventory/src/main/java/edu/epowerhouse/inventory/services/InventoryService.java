@@ -3,10 +3,13 @@ package edu.epowerhouse.inventory.services;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import edu.epowerhouse.common.models.aggregations.InventoryItem;
 import edu.epowerhouse.common.models.records.Inventory;
 import edu.epowerhouse.inventory.repositories.InventoryRepository;
 
+@Service
 public class InventoryService {
     private final InventoryRepository inventoryRepository;
 

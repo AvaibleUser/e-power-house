@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import edu.epowerhouse.common.models.enums.JobTitle;
 import edu.epowerhouse.common.models.records.Employee;
+import edu.epowerhouse.common.utils.DatabaseConnection;
 
 @Component
 public class EmployeeDAO {
@@ -18,8 +19,8 @@ public class EmployeeDAO {
 
     private final Connection connection;
 
-    public EmployeeDAO(Connection connection) {
-        this.connection = connection;
+    public EmployeeDAO() {
+        this.connection = DatabaseConnection.getConnection();
     }
 
     public void createEmployee(Employee employee) throws SQLException {

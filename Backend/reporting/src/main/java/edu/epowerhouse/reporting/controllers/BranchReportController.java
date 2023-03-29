@@ -21,11 +21,13 @@ public class BranchReportController {
 
     @GetMapping("/most-sales")
     public List<BranchSales> getBranchesWithMostSales() throws SQLException {
+        System.out.println("log: in controller method most-sales");
         return branchReportService.getBranchesWithMostSales();
     }
 
     @GetMapping("/highest-income")
     public List<BranchSales> getBranchesWithHighestIncome() throws SQLException {
+        System.out.println("log: in controller method highest-income");
         return branchReportService.getBranchesWithHighestIncome();
     }
 }

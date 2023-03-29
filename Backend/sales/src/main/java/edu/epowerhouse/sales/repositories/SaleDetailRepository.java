@@ -7,9 +7,16 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+import org.springframework.web.reactive.function.client.WebClient;
+
 import edu.epowerhouse.common.models.aggregations.InvoiceLineItem;
 import edu.epowerhouse.common.models.records.SaleDetail;
+import edu.epowerhouse.common.models.records.Stock;
+import edu.epowerhouse.common.utils.DatabaseConnection;
+import reactor.core.publisher.Mono;
 
+@Repository
 public class SaleDetailRepository {
     private static final String SELECT_SALE_DETAILS = "SELECT p.nombre AS product_name, dv.cantidad AS amount, "
             + "p.precio_unidad AS unit_price, (dv.cantidad * p.precio_unidad) AS total "
@@ -21,9 +28,11 @@ public class SaleDetailRepository {
             + "VALUES (?, ?, ?)";
 
     private final Connection connection;
+    private final WebClient webClient;
 
-    public SaleDetailRepository(Connection connection) {
-        this.connection = connection;
+    public SaleDetailRepository(WebClient.Builder webClientBuilder) {
+        this.connection = DatabaseConnection.getConnection();
+        this.webClient = webClientBuilder.baseUrl("http://inventory:8080").build();
     }
 
     public List<InvoiceLineItem> findSaleDetailsBySaleId(int saleId) throws SQLException {
@@ -46,18 +55,29 @@ public class SaleDetailRepository {
         return lineItems;
     }
 
-    public void createSaleDetails(List<SaleDetail> saleDetails) throws SQLException {
+    public void createSaleDetails(long saleId, int branchId, List<SaleDetail> saleDetails) throws SQLException {
         try (PreparedStatement statement = connection.prepareStatement(INSERT_SALE_DETAIL)) {
-            connection.setAutoCommit(false);
-
             for (SaleDetail saleDetail : saleDetails) {
-                statement.setInt(1, saleDetail.saleId());
+                Stock stockPurchased = new Stock(
+                        branchId,
+                        saleDetail.productId(),
+                        saleDetail.amount());
+
+                statement.setLong(1, saleId);
                 statement.setInt(2, saleDetail.productId());
                 statement.setInt(3, saleDetail.amount());
                 statement.addBatch();
+
+                webClient.put().uri("/grocer/stocks/shipment/sale/")
+                        .body(Mono.just(stockPurchased), Stock.class)
+                        .retrieve()
+                        .onStatus(
+                                httpStatus -> httpStatus.value() != 200,
+                                error -> Mono.error(new IllegalArgumentException("The stock cannot be purchased")))
+                        .bodyToMono(Void.class)
+                        .block();
             }
             statement.executeBatch();
-            connection.commit();
         }
     }
 }
