@@ -23,4 +23,5 @@ INSERT INTO ventas.venta (cui_empleado, nit_cliente, id_sucursal, fecha, descuen
 
 -- Se registran los productos que se compraron en la venta
 INSERT INTO ventas.detalle_venta (id_venta, id_producto, cantidad, precio_unidad)
-    SELECT MOD(ROW_NUMBER() OVER (), 5) + 1, id, ROUND(RANDOM() * 3), precio_unidad FROM ventas.producto ORDER BY RANDOM() LIMIT 12;
+    SELECT MOD(ROW_NUMBER() OVER (), 14) + 1, id, FLOOR(RANDOM() * 4) + 1, precio_unidad
+        FROM ventas.producto ORDER BY RANDOM() LIMIT 40;
