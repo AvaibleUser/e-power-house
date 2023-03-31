@@ -14,24 +14,23 @@ import edu.epowerhouse.common.utils.DatabaseConnection;
 
 @Repository
 public class ProductReportRepository {
-    private static final String FIND_PRODUCTS_SOLD = "SELECT p.id, p.nombre, p.descripcion, SUM(cantidad) AS amount, SUM(dv.cantidad"
-            + " * dv.precio_unidad * (1 - discount)) AS total_revenue, SUM(dv.cantidad * dv.precio_unidad * v.descuento) AS discounted "
+    private static final String FIND_PRODUCTS_SOLD = "SELECT p.id, p.nombre, p.descripcion, SUM(cantidad) AS amount, SUM(dv.cantidad * dv.precio_unidad) "
+            + "AS total_income, SUM(dv.cantidad * dv.precio_unidad * (1 - v.descuento)) AS total_revenue, SUM(dv.cantidad * dv.precio_unidad * v.descuento) AS discounted "
             + "FROM ventas.detalle_venta dv "
             + "JOIN ventas.venta v ON dv.id_venta = v.id "
-            + "JOIN ventas.producto p ON dv.id_producto = p.id "
-            + "GROUP BY p.id, p.nombre, p.descripcion ORDER BY ";
+            + "JOIN ventas.producto p ON dv.id_producto = p.id ";
 
     private static final String MOST_SELLED_PRODUCTS = FIND_PRODUCTS_SOLD
-            + "total_vendido DESC LIMIT 10";
+            + "GROUP BY p.id, p.nombre, p.descripcion ORDER BY amount DESC LIMIT 10";
 
     private static final String HIGHEST_INCOME_PRODUCTS = FIND_PRODUCTS_SOLD
-            + "totalRevenue DESC LIMIT 10";
+            + "GROUP BY p.id, p.nombre, p.descripcion ORDER BY total_income DESC LIMIT 10";
 
     private static final String MOST_SELLED_PRODUCTS_BY_BRANCH = FIND_PRODUCTS_SOLD
-            + "total_vendido WHERE v.id_sucursal DESC LIMIT 5";
+            + "WHERE v.id_sucursal = ? GROUP BY p.id, p.nombre, p.descripcion ORDER BY amount DESC LIMIT 5";
 
     private static final String HIGHEST_INCOME_PRODUCTS_BY_BRANCH = FIND_PRODUCTS_SOLD
-            + "totalRevenue WHERE v.id_sucursal DESC LIMIT 5";
+            + "WHERE v.id_sucursal = ? GROUP BY p.id, p.nombre, p.descripcion ORDER BY total_income DESC LIMIT 5";
 
     private final Connection connection;
 
@@ -52,6 +51,7 @@ public class ProductReportRepository {
                     String description = resultSet.getString("descripcion");
                     int amount = resultSet.getInt("amount");
                     float totalRevenue = resultSet.getFloat("total_revenue");
+                    float totalIncome = resultSet.getFloat("total_income");
                     float totalDiscounted = resultSet.getFloat("discounted");
 
                     soldProducts.add(new ProductSold(
@@ -60,6 +60,7 @@ public class ProductReportRepository {
                             description,
                             amount,
                             totalRevenue,
+                            totalIncome,
                             totalDiscounted));
                 }
             }

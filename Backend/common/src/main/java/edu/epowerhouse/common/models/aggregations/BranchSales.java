@@ -7,5 +7,6 @@ public record BranchSales(
         String phone,
         int salesAmount,
         float totalRevenue,
+        float totalIncome,
         float discounted) {
 }

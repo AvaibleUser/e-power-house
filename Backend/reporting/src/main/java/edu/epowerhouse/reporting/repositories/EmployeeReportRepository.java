@@ -14,17 +14,18 @@ import edu.epowerhouse.common.utils.DatabaseConnection;
 
 @Repository
 public class EmployeeReportRepository {
-    private static final String FIND_EMPLOYEE_SALES = "SELECT e.cui, CONCAT(e.nombre, ' ', e.apellido) AS employee_name, s.nombre, SUM(dv.cantidad) AS sales_amount, "
-            + "SUM(dv.cantidad * dv.precio_unidad * (1 - v.descuento)) AS total_revenue, SUM(dv.cantidad * dv.precio_unidad * v.descuento) AS discounted "
-            + "FROM ventas.venta v "
+    private static final String FIND_EMPLOYEE_SALES = "SELECT e.cui, CONCAT(e.nombre, ' ', e.apellido) AS employee_name, s.nombre, SUM(dv.cantidad) AS sales_amount, SUM(dv.cantidad * dv.precio_unidad) "
+            + "AS total_income, SUM(dv.cantidad * dv.precio_unidad * (1 - v.descuento)) AS total_revenue, SUM(dv.cantidad * dv.precio_unidad * v.descuento) AS discounted "
+            + "FROM empleados.empleado e "
+            + "JOIN ventas.venta v ON v.cui_empleado = e.cui "
             + "JOIN ventas.detalle_venta dv ON dv.id_venta = v.id "
-            + "JOIN ventas.sucursal s ON s.id = v.id_sucursal GROUP BY s.id, s.nombre, s.direccion, s.telefono ";
+            + "JOIN ventas.sucursal s ON s.id = v.id_sucursal GROUP BY e.cui, e.nombre, e.apellido, s.nombre ";
 
     private static final String EMPLOYEES_WITH_MOST_SALES = FIND_EMPLOYEE_SALES
             + "ORDER BY sales_amount DESC LIMIT 3";
 
     private static final String EMPLOYEES_WITH_HIGHEST_INCOME = FIND_EMPLOYEE_SALES
-            + "ORDER BY total_revenue DESC LIMIT 3";
+            + "ORDER BY total_income DESC LIMIT 3";
 
     private final Connection connection;
 
@@ -42,6 +43,7 @@ public class EmployeeReportRepository {
                 String branchName = resultSet.getString("nombre");
                 int salesAmount = resultSet.getInt("sales_amount");
                 float totalRevenue = resultSet.getFloat("total_revenue");
+                float totalIncome = resultSet.getFloat("total_income");
                 float discounted = resultSet.getFloat("discounted");
 
                 employeesSales.add(new EmployeeSales(
@@ -50,6 +52,7 @@ public class EmployeeReportRepository {
                         branchName,
                         salesAmount,
                         totalRevenue,
+                        totalIncome,
                         discounted));
             }
         }

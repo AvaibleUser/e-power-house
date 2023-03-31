@@ -6,5 +6,6 @@ public record ProductSold(
         String description,
         int amount,
         float totalRevenue,
+        float totalIncome,
         float totalDiscounted) {
 }

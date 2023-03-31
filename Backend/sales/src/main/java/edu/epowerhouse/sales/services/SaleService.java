@@ -61,7 +61,7 @@ public class SaleService {
                 lineItems);
     }
 
-    public void createSale(Sale sale) throws SQLException {
+    public float createSale(Sale sale) throws SQLException {
         String employeeCui = sale.employeeCui();
         Employee employee = webClient.get().uri("/public/employee/" + employeeCui)
                 .retrieve()
@@ -87,6 +87,8 @@ public class SaleService {
                 sale.saleDetails());
 
         saleRepository.createSale(saleWithBranchId);
+
+        return discount;
     }
 
     public void updateSale(Sale sale) throws SQLException {

@@ -14,8 +14,8 @@ import edu.epowerhouse.common.utils.DatabaseConnection;
 
 @Repository
 public class BranchReportRepository {
-    private static final String FIND_BRANCH_SALES = "SELECT s.id, s.nombre, s.direccion, s.telefono, SUM(dv.cantidad) AS sales_amount, "
-            + "SUM(dv.cantidad * dv.precio_unidad * (1 - v.descuento)) AS total_revenue, SUM(dv.cantidad * dv.precio_unidad * v.descuento) AS discounted "
+    private static final String FIND_BRANCH_SALES = "SELECT s.id, s.nombre, s.direccion, s.telefono, SUM(dv.cantidad) AS sales_amount, SUM(dv.cantidad * dv.precio_unidad) "
+            + "AS total_income, SUM(dv.cantidad * dv.precio_unidad * (1 - v.descuento)) AS total_revenue, SUM(dv.cantidad * dv.precio_unidad * v.descuento) AS discounted "
             + "FROM ventas.venta v "
             + "JOIN ventas.detalle_venta dv ON dv.id_venta = v.id "
             + "JOIN ventas.sucursal s ON s.id = v.id_sucursal GROUP BY s.id, s.nombre, s.direccion, s.telefono ";
@@ -24,7 +24,7 @@ public class BranchReportRepository {
             + "ORDER BY sales_amount DESC LIMIT 3";
 
     private static final String BRANCHES_WITH_HIGHEST_INCOME = FIND_BRANCH_SALES
-            + "ORDER BY total_revenue DESC LIMIT 3";
+            + "ORDER BY total_income DESC LIMIT 3";
 
     private final Connection connection;
 
@@ -43,6 +43,7 @@ public class BranchReportRepository {
                 String phone = resultSet.getString("telefono");
                 int salesAmount = resultSet.getInt("sales_amount");
                 float totalRevenue = resultSet.getFloat("total_revenue");
+                float totalIncome = resultSet.getFloat("total_income");
                 float discounted = resultSet.getFloat("discounted");
 
                 branchSales.add(new BranchSales(id,
@@ -51,6 +52,7 @@ public class BranchReportRepository {
                         phone,
                         salesAmount,
                         totalRevenue,
+                        totalIncome,
                         discounted));
             }
         }

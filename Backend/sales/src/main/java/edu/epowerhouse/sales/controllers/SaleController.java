@@ -34,11 +34,11 @@ public class SaleController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Void> createSale(@RequestBody Sale sale) {
+    public ResponseEntity<Float> createSale(@RequestBody Sale sale) {
         try {
-            saleService.createSale(sale);
-            System.out.println("La venta se hizo");
-            return ResponseEntity.status(HttpStatus.CREATED).build();
+            float saleDiscount = saleService.createSale(sale);
+            System.out.println("La venta se hizo, descuento " + saleDiscount);
+            return ResponseEntity.status(HttpStatus.CREATED).body(saleDiscount);
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

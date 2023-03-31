@@ -5,5 +5,6 @@ public record ClientWithPurchases(
     String name,
     int purchasesAmount,
     float totalRevenue,
+    float totalIncome,
     float totalDiscounted) {
 }
