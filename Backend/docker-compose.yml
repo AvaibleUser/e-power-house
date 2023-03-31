@@ -1,0 +1,73 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: epowerhousemanagemer
+      POSTGRES_PASSWORD: epowerhousemanagemerpass
+    networks:
+      - multimanager
+    volumes:
+      - ../Database:/docker-entrypoint-initdb.d
+
+  inventory:
+    build:
+      context: ./inventory
+    networks:
+      - multimanager
+    ports:
+      - "8084:8080"
+    depends_on:
+      - db
+
+  sales:
+    build:
+      context: ./sales
+    networks:
+      - multimanager
+    ports:
+      - "8083:8080"
+    depends_on:
+      - db
+
+  reporting:
+    build:
+      context: ./reporting
+    networks:
+      - multimanager
+    ports:
+      - "8082:8080"
+    depends_on:
+      - db
+
+  authentication:
+    build:
+      context: ./authentication
+    networks:
+      - multimanager
+    ports:
+      - "8081:8080"
+    depends_on:
+      - db
+
+  gateway:
+    build:
+      context: ./gateway
+    networks:
+      - multimanager
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+      - inventory
+      - sales
+      - reporting
+      - authentication
+
+volumes:
+  postgres-data:
+
+networks:
+  multimanager:
+    driver: bridge

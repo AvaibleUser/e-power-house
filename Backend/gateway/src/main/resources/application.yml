@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: multimanagers-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: sales
+          uri: http://sales:8080
+          predicates:
+            - Path=/api/salesman/**
+
+        - id: reporting
+          uri: http://reporting:8080
+          predicates:
+            - Path=/api/admin/**
+
+        - id: authentication
+          uri: http://authentication:8080
+          predicates:
+            - Path=/api/**
+
+        - id: inventory
+          uri: http://inventory:8080
+          predicates:
+            - Path=/api/**
