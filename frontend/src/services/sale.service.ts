@@ -4,7 +4,7 @@ import { getEmployee } from "./login.service";
 
 const baseUrl = "http://localhost:8083"; //"http://sales:8080";
 
-export async function addSale(sale: Sale): Promise<void> {
+export async function addSale(sale: Sale): Promise<number> {
   const { cui: employeeCui } = getEmployee();
   const { data } = await axios.post(`${baseUrl}/sales/`, {
     ...sale,

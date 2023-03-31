@@ -6,7 +6,7 @@ import { getEmployee } from "./login.service";
 
 const baseUrl = "http://localhost:8084"; //"http://inventory:8080";
 
-export async function getAllBranches(): Promise<any> {
+export async function getAllBranches(): Promise<Branch[]> {
   const { branchId } = getEmployee();
   const { data } = await axios.get<Branch[]>(`${baseUrl}/grocer/branch/`);
 

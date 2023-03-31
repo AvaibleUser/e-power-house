@@ -14,6 +14,8 @@ import Salesmans from "./routes/salesmans.route";
 import Sales from "./routes/salesmans/sales.route";
 import Inventory from "./routes/inventory.route";
 import StockProducts from "./routes/inventory/stock-products.route";
+import Admin from "./routes/admin.route";
+import Reports from "./routes/admin/reports.route";
 
 const router = createBrowserRouter([
   {
@@ -42,6 +44,20 @@ const router = createBrowserRouter([
         path: "warehouse/:warehouseId",
         element: <StockProducts />,
         loader: getCompleteStockByWarehouse,
+      },
+    ],
+  },
+  {
+    path: "admin",
+    element: <Admin />,
+    children: [
+      {
+        path: "reports",
+        element: <Reports />,
+      },
+      {
+        path: "employees",
+        element: <StockProducts />,
       },
     ],
   },

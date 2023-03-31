@@ -5,24 +5,24 @@ import Employee from "../models/employee.model";
 const baseUrl = "http://localhost:8081"; //"http://authentication:8080";
 
 export function getPathToRedirect() {
-  const employee = getEmployee();
+  try {
+    const employee = getEmployee();
 
-  switch (employee?.jobTitle?.toString()) {
-    case "VENDEDOR":
-      return "/salesman";
+    switch (employee?.jobTitle?.toString()) {
+      case "VENDEDOR":
+        return "/salesman";
 
-    case "INVENTARISTA":
-      return "/inventory";
+      case "INVENTARISTA":
+        return "/inventory";
 
-    case "BODEGUERO":
-      return "/warehouse";
+      case "BODEGUERO":
+        return "/warehouse";
 
-    case "ADMINISTRADOR":
-      return "/admin";
-
-    default:
-      return "/login";
-  }
+      case "ADMINISTRADOR":
+        return "/admin";
+    }
+  } catch (e: unknown) {}
+  return "/login";
 }
 
 export function logout() {
@@ -41,5 +41,5 @@ export async function login(cui: string, password: string) {
 }
 
 export function getEmployee(): Employee {
-  return JSON.parse(localStorage.getItem("employee") || "");
+  return JSON.parse(localStorage.getItem("employee") || "{}");
 }

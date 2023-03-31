@@ -1,27 +1,28 @@
 import React, { useEffect } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { useNavigate, Outlet } from "react-router-dom";
 
 import Header from "../modules/header.component";
 import { getPathToRedirect } from "../services/login.service";
 
 const items = [
-  { itemName: "Ventas", itemUri: "sales" },
+  { itemName: "Reportes", itemUri: "reports" },
+  { itemName: "Empleados", itemUri: "employees" },
 ];
 
-export default function Salesmans() {
+export default function Admin() {
   const navigate = useNavigate();
 
   useEffect(() => {
     const redirectPath = getPathToRedirect();
-  
-    if (redirectPath !== "/salesman") {
+
+    if (redirectPath !== "/inventory") {
       navigate(redirectPath);
     }
-  }, [])
+  }, []);
 
   return (
     <>
-      <Header title="Vendedores" items={items} />
+      <Header title="Administrador" items={items} />
       <Outlet />
     </>
   );

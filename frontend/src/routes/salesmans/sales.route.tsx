@@ -47,7 +47,7 @@ export default function Sales() {
         const client = await getClient(nit);
 
         try {
-          await addSale({
+          const discount: number = await addSale({
             id: 0,
             clientNit: client.nit,
             saleDetails: shoppingCart.map((product) => ({
@@ -60,16 +60,15 @@ export default function Sales() {
 
           setNit("");
           setModalTitle("La venta se registro con exito");
-          setModalMsg("");
-          setTimeout(() => {
-            stock.length = 0;
-            setShoppingCart([]);
-            revalidator.revalidate();
-            setModalTitle("Casi terminamos la compra");
-            setModalMsg("Solo se necesitan los datos del cliente");
-          }, 2500);
+
+          if (discount > 0) {
+            setModalMsg(`Obtuvo un descuento de ${discount * 100}%`);
+          } else {
+            setModalMsg("");
+          }
         } catch (e: unknown) {
           setNit("");
+          setModalMsg("La venta no se pudo realizar, verifique los datos");
         }
       } catch (e: unknown) {
         setModalMsg(
@@ -101,6 +100,14 @@ export default function Sales() {
     } else {
       setNit(nit);
     }
+  };
+
+  const refreshProducts = () => {
+    stock.length = 0;
+    setShoppingCart([]);
+    revalidator.revalidate();
+    setModalTitle("Casi terminamos la compra");
+    setModalMsg("Solo se necesitan los datos del cliente");
   };
 
   const products = stock.map(
@@ -147,6 +154,7 @@ export default function Sales() {
           <div className="modal-box relative">
             <label
               htmlFor="sale-modal"
+              onClick={refreshProducts}
               className="btn btn-sm btn-circle absolute right-2 top-2"
             >
               ✕
