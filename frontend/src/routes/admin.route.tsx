@@ -16,7 +16,7 @@ export default function Admin() {
     const redirectPath = getPathToRedirect();
 
     if (redirectPath !== "/inventory") {
-      navigate(redirectPath);
+      //navigate(redirectPath);
     }
   }, []);
 

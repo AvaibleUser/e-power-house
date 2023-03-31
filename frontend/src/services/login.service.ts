@@ -40,6 +40,12 @@ export async function login(cui: string, password: string) {
   return data;
 }
 
+export async function signUp(employee: Employee) {
+  const { data } = await axios.post<Employee>(`${baseUrl}/admin/employee/`, employee);
+
+  return data;
+}
+
 export function getEmployee(): Employee {
   return JSON.parse(localStorage.getItem("employee") || "{}");
 }

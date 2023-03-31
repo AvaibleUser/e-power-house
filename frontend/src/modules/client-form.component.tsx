@@ -42,7 +42,7 @@ export default function ClientForm({ nit, setNit, completeSale }: any) {
       <Input
         label="Fecha de nacimiento"
         type="date"
-        placeholder={Date.now()}
+        placeholder="01/01/2023"
         value={birthdate}
         setValue={setBirthdate}
       />

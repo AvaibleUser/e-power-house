@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 
 import org.springframework.stereotype.Component;
 
@@ -13,7 +14,7 @@ import edu.epowerhouse.common.utils.DatabaseConnection;
 
 @Component
 public class EmployeeDAO {
-    private static final String INSERT_EMPLOYEE_SQL = "INSERT INTO empleados.empleado (cui, nombre, apellido, contrasena, id_sucursal, id_bodega, puesto_trabajo, fecha_nacimiento, direccion, correo_electronico, telefono) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String INSERT_EMPLOYEE_SQL = "INSERT INTO empleados.empleado (cui, nombre, apellido, contrasena, id_sucursal, id_bodega, puesto_trabajo, fecha_nacimiento, direccion, correo_electronico, telefono) VALUES (?, ?, ?, ?, ?, ?, ?::puesto, ?, ?, ?, ?)";
     private static final String FIND_EMPLOYEE_SQL = "SELECT * FROM empleados.empleado WHERE cui = ?";
     private static final String UPDATE_EMPLOYEE_SQL = "UPDATE empleados.empleado SET nombre = ?, apellido = ?, contrasena = ?, id_sucursal = ?, id_bodega = ?, puesto_trabajo = ?, fecha_nacimiento = ?, direccion = ?, correo_electronico = ?, telefono = ? WHERE cui = ?";
 
@@ -29,13 +30,23 @@ public class EmployeeDAO {
             statement.setString(2, employee.name());
             statement.setString(3, employee.lastName());
             statement.setString(4, employee.password());
-            statement.setInt(5, employee.branchId());
-            statement.setInt(6, employee.warehouseId());
-            statement.setString(7, employee.jobTitle().name());
+            statement.setString(7, employee.jobTitle().name().toLowerCase());
             statement.setDate(8, java.sql.Date.valueOf(employee.birthdate()));
             statement.setString(9, employee.address());
             statement.setString(10, employee.email());
             statement.setString(11, employee.phone());
+
+            if (employee.branchId() == 0) {
+                statement.setNull(5, Types.NULL);
+            } else {
+                statement.setInt(5, employee.branchId());
+            }
+
+            if (employee.warehouseId() == 0) {
+                statement.setNull(6, Types.NULL);
+            } else {
+                statement.setInt(6, employee.warehouseId());
+            }
 
             statement.executeUpdate();
         }

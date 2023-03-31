@@ -16,6 +16,7 @@ import Inventory from "./routes/inventory.route";
 import StockProducts from "./routes/inventory/stock-products.route";
 import Admin from "./routes/admin.route";
 import Reports from "./routes/admin/reports.route";
+import Employees from "./routes/admin/employees.route";
 
 const router = createBrowserRouter([
   {
@@ -57,7 +58,7 @@ const router = createBrowserRouter([
       },
       {
         path: "employees",
-        element: <StockProducts />,
+        element: <Employees />,
       },
     ],
   },

@@ -2,8 +2,8 @@ import JobTitle from "./job-title.enum";
 
 export default interface Employee {
   cui: string;
-  branchId: number;
-  warehouseId: number;
+  branchId: number | undefined;
+  warehouseId: number | undefined;
   jobTitle: JobTitle;
   name: string | undefined;
   lastName: string | undefined;
